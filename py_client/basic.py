@@ -12,7 +12,7 @@ get_response= requests.get (endpoint,params={"abc":123},json={"name":"omar"})
 # print(get_response.text)
 #print raaw text
 print(get_response.json())
-print(get_response.text())
+python
 
 
 # print(get_response.status_code)
