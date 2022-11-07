@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import *
 from myapi.serializers import Productserializer
-from rest_framework import generics
+from rest_framework import generics ,mixins ,permissions,authentication
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -18,6 +18,8 @@ Prodeuct_DetailAPI_Veiw=Product_Detail.as_view()
 class ProdeuctCreateAPIVeiw (generics.CreateAPIView):
   queryset=Product.objects.all()
   serializer_class=Productserializer 
+  permission_classes=[permissions.IsAuthenticatedOrReadOnly]  
+
   def perform_create(self,serializer):
     print("Helooooooooooooo"+serializer.validated_data)
     serializer.save()
@@ -26,11 +28,16 @@ Prodeuct_CreateAPI_Veiw=ProdeuctCreateAPIVeiw.as_view()
 
 class Prodeuct_list_api_view(generics.ListAPIView):
   queryset=Product.objects.all()
-  serializer_class=Productserializer 
+  serializer_class=Productserializer
+  permission_classes=[permissions.IsAuthenticatedOrReadOnly] 
+
 
 class Prodeuctlist_craete_Api(generics.ListCreateAPIView):
    queryset=Product.objects.all()
    serializer_class=Productserializer 
+   permission_classes=[permissions.IsAuthenticatedOrReadOnly] 
+   authentication_classes=[authentication.SessionAuthentication]
+
 
 
 @api_view(['POST','GET'])
@@ -88,3 +95,14 @@ class Product_Delete(generics.DestroyAPIView):
 
   serializer_class=Productserializer
 
+class ProductMixinView(mixins.ListModelMixin, generics.GenericAPIView):
+  queryset=Product.objects.all()
+  serializer_class=Productserializer
+  # permission_classes=[permissions.IsAuthenticatedOrReadOnly] 
+  
+  lookup_field='pk'
+  def get(self,request,*args,**kwargs): # ==> http get
+       return self.list(request,*args,**kwargs)
+
+  def post  (self,request,*args,**kwargs):
+           return self.create(request,*args,**kwargs)

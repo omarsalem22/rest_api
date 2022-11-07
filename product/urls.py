@@ -10,6 +10,7 @@ urlpatterns = [
     path("destroy/<int:pk>",views.Product_Delete.as_view() ,name="Delete"),
     path("update/<int:pk>",views.Product_Update.as_view() ,name="Update"),
 
+    path('listmixin/', views. ProductMixinView.as_view(), name='listapimixin'),
     
 
 
