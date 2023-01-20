@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
+
 # Create your views here.  
 class Product_Detail(generics.RetrieveAPIView):
   queryset=Product.objects.all()
@@ -18,12 +19,10 @@ Prodeuct_DetailAPI_Veiw=Product_Detail.as_view()
 class ProdeuctCreateAPIVeiw (generics.CreateAPIView):
   queryset=Product.objects.all()
   serializer_class=Productserializer 
-  permission_classes=[permissions.IsAuthenticatedOrReadOnly]  
+ 
 
-  def perform_create(self,serializer):
-    print("Helooooooooooooo"+serializer.validated_data)
-    serializer.save()
-Prodeuct_CreateAPI_Veiw=ProdeuctCreateAPIVeiw.as_view()
+ 
+
 
 
 class Prodeuct_list_api_view(generics.ListAPIView):
@@ -32,11 +31,11 @@ class Prodeuct_list_api_view(generics.ListAPIView):
   permission_classes=[permissions.IsAuthenticatedOrReadOnly] 
 
 
-class Prodeuctlist_craete_Api(generics.ListCreateAPIView):
+class Prodeuct_list_craete_Api(generics.ListCreateAPIView):
    queryset=Product.objects.all()
    serializer_class=Productserializer 
-   permission_classes=[permissions.IsAuthenticatedOrReadOnly] 
-   authentication_classes=[authentication.SessionAuthentication]
+   authentication_classes =[authentication.SessionAuthentication,authentication.TokenAuthentication] 
+   permission_classes=[permissions.DjangoModelPermissions]
 
 
 
@@ -106,3 +105,5 @@ class ProductMixinView(mixins.ListModelMixin, generics.GenericAPIView):
 
   def post  (self,request,*args,**kwargs):
            return self.create(request,*args,**kwargs)
+
+           
